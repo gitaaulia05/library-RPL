@@ -16,6 +16,17 @@ export default {
                 lora : ["Lora"],
                 inter : ["Inter"],
             },
+            colors: {
+                yellow : '#FFEDAC',
+                red :'#FFE9E9',
+                redDark: '#FFDCDC',
+                blue :'#E9FCFF',
+                purple1 :'#DFD6FF',
+                purple2 :'#F9F9FF',
+                green : '#E9FFF4',
+                greenDark : '#D3F7E5',
+                
+            }
         },
     },
     plugins: [],
