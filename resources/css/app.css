@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.navDiv.active {
+    @apply bg-gradient-to-tl from-purple-700 to-blueNav ;
+}
+
+a.active{
+    @apply  shadow-xl text-sm  my-0 mx-4 flex items-center whitespace-nowrap rounded-lg bg-white px-4 font-semibold text-slate-700;
+   
+}
+
+i.active{
+    @apply text-white;
+}

@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Http;
 class BukuServices
 {
     protected $baseUrl;
+    protected $token;
 
     public function __construct(){
             $this->baseUrl = config('app.api_base_url' , ENV('API_BASE_URL'));
-
+            $this->token = session('Authorization');
     }
 
+   
 
     public function login(Request  $request){
         $response = Http::post('http://api-library.test/api/petugas/login' , [
@@ -25,24 +27,39 @@ class BukuServices
         return $response->successful() ? $response->json('data') : null;
     }
 
-    public function getPetugas($token){
+
+    public function getPetugas(){
  
-        $response = Http::withToken($token)->get('http://api-library.test/api/petugas/saatIni');
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '. $this->token
+        ])->get('http://api-library.test/api/petugas/saatIni');
         return $response->successful() ? $response->json('data') : null;
+
+        Log::info('Authorization Header dikirim:', ['Authorization' => 'Bearer ' . $token]);
     }
 
         public function logout(Request $request){
-            $response = Http::delete('http://api-library.test/api/petugas/logout');
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer ".$this->token,
+            ])->delete('http://api-library.test/api/petugas/logout');
     
             return $response->successful() ? $response->json('data') : null;
         }
 
+        public function detail_data($namaBukuSlug){
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer ". $this->token,
+            ])->get("http://api-library.test/api/buku/$namaBukuSlug");
+
+            return $response->successful() ? $response->json('data') : null;
+        }
+
     public function create_data(Request $request){
-        $response = Http::asMultipart()->attach(
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer ".$this->token,
+        ])->asMultipart()->attach(
             'gambar_buku', file_get_contents($request->file('gambar_buku')->getRealPath()),$request->file('gambar_buku')->getClientOriginalName()
         )->post('http://api-library.test/api/buku' , [
-            // 'id_buku' => $request->id_buku,  
-            // 'nama_buku_slug' => $request->nama_buku_slug,
             'nama_buku' => $request->nama_buku,
             'nama_penulis' => $request->nama_penulis,
             'nama_penerbit' => $request->nama_penerbit,
@@ -55,13 +72,20 @@ class BukuServices
     }
 
     Public function search_data(){
-            $response = Http::get('http://api-library.test/api/buku');
+        $token = session('Authorization');
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer ".$this->token,
+            ])->get('http://api-library.test/api/buku');
             
             return $response->successful() ? $response->json('data') : null;
     }  
 
+
+
     public function updateBuku( $namaBukuSlug, Request $request  ){
-        $response = Http::asMultipart()->attach(
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '. $this->token
+        ])->asMultipart()->attach(
             'gambar_buku', 
             file_get_contents($request->file('gambar_buku')->getRealPath()), 
             $request->file('gambar_buku')->getClientOriginalName()
@@ -86,9 +110,10 @@ class BukuServices
     }
 
 
-
     Public function delete_data($namaBukuSlug){
-        $response = Http::delete("http://api-library.test/api/buku/$namaBukuSlug");
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->token,
+        ])->delete("http://api-library.test/api/buku/$namaBukuSlug");
         return $response->successful() ? $response->json('data') : null;
     }
   

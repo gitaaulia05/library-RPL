@@ -3,10 +3,12 @@
 namespace App\Http\Middleware;
 
 use Log;
+
 use Closure;
 use App\Models\Petugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
 class TokenMiddleware
@@ -18,28 +20,21 @@ class TokenMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        \Log::info('Session sebelum handle:', session()->all());
-
-        $token = session('auth_token');
-
-     
-
-        if(!$token) {
-            return redirect()->back()->with("message-error" , 'Silakan login terlebih dahulu.');
     
-        }
+    $token = session('Authorization');
 
-        $petugas = Petugas::where('token' , $token)->first();
+    $petugas = petugas::where('token', $token)->first();
 
-        if(!$petugas){
-            return redirect()->back()->with("message-error" , 'Sesi anda berakhir silahkan login');;
-        }
-
-        Auth::login($petugas);
-
-        Log::info('Session saat ini:', session()->all());
-
-        return $next($request);
+    if($petugas){
+        $request->headers->set('Authorization' , 'Bearer '.$token);
+                return $next($request);
+    } else {
+        log::info('hilang' .$token);
+        return redirect('/');
     }
+
+  
+    }
+
+    
 }

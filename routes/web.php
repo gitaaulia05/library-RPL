@@ -7,16 +7,15 @@ use App\Http\Controllers\BarangPerpustakaan;
 use App\Http\Controllers\AnggotaPerpustakaan;
 
 
-
-
-Route::get('/', [LoginController::class, 'index'])->middleware('web');;
+Route::get('/', [LoginController::class, 'index']);
 Route::post('/login-auth', [LoginController::class, 'login']);
-Route::delete('/logout', [LoginController::class, 'logout'])->middleware('web');;
+
 
 
 Route::middleware(TokenMiddleware::class)->group(function () {
 
-
+    Route::delete('/logout', [LoginController::class, 'logout']);
+Route::get('/akun' , [LoginController::class, 'akun']);
 Route::get('/buku', [BarangPerpustakaan::class, 'index']);
 Route::get('/tambah-buku', [BarangPerpustakaan::class, 'tambahBuku']);
 Route::post('/simpan-tambah-buku', [BarangPerpustakaan::class, 'SimpanBuku']);
@@ -25,6 +24,7 @@ Route::get('/detail-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'detailBuk
 
 Route::get('/ubah-data-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'ubahData']);
 
+// Route::post('/update-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'UpdateBuku'])->name('update.buku');
 Route::post('/update-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'UpdateBuku'])->name('update.buku');
 
 Route::delete('/detail-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'deleteBuku']);

@@ -18,13 +18,18 @@ export default {
             },
             colors: {
                 yellow : '#FFEDAC',
-                red :'#FFE9E9',
+                yellow2 : '#FFB423',
+                red1 :'#FFCCCC',
+                red2 :'#FF6466',
+                red3 :'#FFE9E9',
                 redDark: '#FFDCDC',
                 blue :'#E9FCFF',
                 purple1 :'#DFD6FF',
                 purple2 :'#F9F9FF',
-                green : '#E9FFF4',
+                green2 : '#2CCF3C',
+                green : '#BFF3C4',
                 greenDark : '#D3F7E5',
+                blueNav : '#312991',
                 
             }
         },

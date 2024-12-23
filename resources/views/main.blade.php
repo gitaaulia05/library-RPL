@@ -2,10 +2,8 @@
 
 @section('container')
 
-{{$petugas}}
-      @livewire('search-buku' , [
-             'petugas' => $petugas
-      ]);
+
+      @livewire('search-buku' )
 
     
 @endsection

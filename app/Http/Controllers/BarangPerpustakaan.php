@@ -18,17 +18,15 @@ class BarangPerpustakaan extends Controller
 
     public function __construct(BukuServices $bukuService){
             $this->bukuService = $bukuService;
-          
+            $this->petugas = $this->bukuService->getPetugas();
     }
 
     public function index(){
-
-        $petugas = Auth::user();
+     
             return view('main' , [
                 "title" => "Buku | Perpustakaan",
                 "Header" => "Buku",
-                "petugas" => $petugas,
-              
+                "petugas" => $this->petugas['username'],
             ]);
     }
 
@@ -36,18 +34,15 @@ class BarangPerpustakaan extends Controller
         return view('buku.tambahBuku' , [
             "title" => "Tambah Buku | Perpustakaan",
             "Header" => "Tambah Buku",
+            "petugas" => $this->petugas['username'],
         ]);
     }
 
     public function SimpanBuku(Request $request){
        $response = $this->bukuService->create_data($request);
-
-    
         if($response){
-            return redirect('/')->with('message-success' , "Data Buku Baru Berhasil Dibuat!");
+            return redirect('/buku')->with('message-success' , "Data Buku Baru Berhasil Dibuat!");
         } else {
-
-            // dd($response->status(), $response->body());
             return redirect()->back();
         }
 
@@ -55,14 +50,13 @@ class BarangPerpustakaan extends Controller
 
 
     public function detailBuku($namaBukuSlug){
-        
-        $response = Http::get("http://api-library.test/api/buku/$namaBukuSlug");
-        $data = $response->json('data');
-       
+        $response = $this->bukuService->detail_data($namaBukuSlug);
+
         return view('detailBuku'  , [
             "title" => "Detail Buku | Perpustakaan",
             "Header" => "Detail Buku",
-            "data" => $data, 
+            "data" => $response, 
+            "petugas" => $this->petugas['username'],
             "urlBase" => "http://api-library.test/",
             
         ]);
@@ -71,27 +65,29 @@ class BarangPerpustakaan extends Controller
             return view('pinjamBuku' , [
                 "title" => "Peminjaman Buku | Perpustakaan",
                 "Header" => "Peminjaman Buku",
+                "petugas" => $this->petugas['username'],
             ]
         );
     }
 
     public function ubahData($namaBukuSlug){
-        $response = Http::get("http://api-library.test/api/buku/$namaBukuSlug");
-        $data = $response->json('data');
+
+        $response = $this->bukuService->detail_data($namaBukuSlug);
 
         return view('UbahBuku' , [
             "title" => "Ubah Data Buku | Perpustakaan",
             "Header" => "Ubah Data Buku",
-            "data" => $data, 
+            "data" => $response, 
+            "petugas" => $this->petugas['username'],
         ]
     );
     }
 
     public function UpdateBuku( $namaBukuSlug, Request $request ){
 
-        // dd($namaBukuSlug, $request->all());
-
         $response = $this->bukuService->updateBuku($namaBukuSlug, $request);
+
+
 
         if($response){
             return redirect('/buku')->with('message-success' , "Data Buku Baru Berhasil Dibuat!");
@@ -114,12 +110,5 @@ class BarangPerpustakaan extends Controller
 
     }
 
-    public function create(BukuCreateRequest $request): JsonResponse{
-        $data = $request->validated();
-
-        $buku = new buku($data);
-        $buku->save();
-
-        return (new BukuResource($buku))->response()->setStatusCode(201);
-    }
+  
 }

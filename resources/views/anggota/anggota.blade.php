@@ -1,4 +1,4 @@
-@extends('template.anggotaNav')
+@extends('template.aside')
 
 @section('container')
    @livewire('anggota-live')
