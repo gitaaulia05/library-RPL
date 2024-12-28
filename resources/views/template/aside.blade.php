@@ -17,6 +17,7 @@
     
     <!-- Main Styling -->
     <link href="{{asset('assets/css/soft-ui-dashboard-tailwind.css?v=1.0.5')}}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
 
 
     <!-- Nepcha Analytics (nepcha.com) -->
@@ -27,7 +28,8 @@
  @vite('resources/css/app.css')
 <body class="m-0 font-sans antialiased font-normal text-base leading-default bg-gray-50 text-slate-500">
 
-    <aside class="max-w-62.5 ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
+    <aside class="max-w-62.5 ease-nav-brand fixed   z-990 inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent" id="aside">
+
       <div class="h-19.5">
         <i class="absolute top-0 right-0 hidden p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden" sidenav-close></i>
         <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="javascript:;" target="_blank">
@@ -41,18 +43,18 @@
       <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
         <ul class="flex flex-col pl-0 mb-0">
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 {{Request::is('buku') || Request::is('detail-buku*')  || Request::is('ubah-data-buku*') || Request::is('tambah-buku*')   ? 'active' : ''}} text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors"  href="/buku">
-              <div class="navDiv {{Request::is('buku') || Request::is('detail-buku*')  || Request::is('ubah-data-buku*') || Request::is('tambah-buku*') ? 'active' : ''}} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-            <i class="fa-solid fa-book {{Request::is('buku') || Request::is('detail-buku*') || Request::is('ubah-data-buku*') || Request::is('tambah-buku*')  ? 'active' : ''}}"></i>
+            <a class="py-2.7 {{Request::is('buku') || Request::is('detail-buku*')  || Request::is('ubah-data-buku*') || Request::is('tambah-buku*')  ||  Request::is('pinjam-buku*')  ? 'active' : ''}} text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors"  href="/buku">
+              <div class="navDiv {{Request::is('buku') || Request::is('detail-buku*')  || Request::is('ubah-data-buku*') || Request::is('tambah-buku*') ||  Request::is('pinjam-buku*')  ? 'active' : ''}} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+            <i class="fa-solid fa-book {{Request::is('buku') || Request::is('detail-buku*') || Request::is('ubah-data-buku*') || Request::is('tambah-buku*') || Request::is('pinjam-buku*')  ? 'active' : ''}}"></i>
               </div>
               <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Buku</span>
             </a>
           </li>
 
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 {{Request::is('anggota') ? 'active' : ''}}  text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors" href="/anggota">
-              <div class=" navDiv {{Request::is('anggota') ? 'active' : ''}} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-            <i class="fa-solid fa-user {{Request::is('anggota') ? 'active' : ''}}"></i>
+            <a class="py-2.7 {{Request::is('anggota') || Request::is('akun') || Request::is('detail-anggota*') || Request::is('pengembalian-buku*') || Request::is('daftar-anggota')  ? 'active' : ''}}  text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors" href="/anggota">
+              <div class=" navDiv {{Request::is('anggota') || Request::is('akun') || Request::is('detail-anggota*') || Request::is('pengembalian-buku*') || Request::is('daftar-anggota')  ? 'active' : ''}} shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+            <i class="fa-solid fa-user {{Request::is('anggota') || Request::is('akun') || Request::is('detail-anggota*') || Request::is('pengembalian-buku*') || Request::is('daftar-anggota')  ? 'active' : ''}}"></i>
               </div>
               <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Anggota</span>
             </a>
@@ -63,9 +65,9 @@
 
     </aside>
 
-        <main class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200">
+        <main class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200 ">
       <!-- Navbar -->
-      <nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start sticky top-[1%] backdrop-saturate-[200%] backdrop-blur-[30px] bg-[hsla(0,0%,100%,0.8)] shadow-blur z-110" navbar-main navbar-scroll="true">
+      <nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start sticky top-[1%] backdrop-saturate-[200%] backdrop-blur-[30px] bg-[hsla(0,0%,100%,0.8)]  z-110 shadow-blur " navbar-main navbar-scroll="true" id="navMain">
         <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
           <nav>
             <!-- breadcrumb -->
@@ -82,9 +84,9 @@
             <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
      
            <li class="flex items-center">
-                <a href="/akun" class="block px-0 py-2 font-semibold transition-all ease-nav-brand text-sm text-slate-500 hover:text-slate-800">
-               
-                  <span class="hidden sm:inline mr-8">{{$petugas}}</span>
+                <a href="/akun" class="petugas  px-0 py-2 font-semibold transition-all ease-nav-brand text-sm text-slate-500 hover:text-slate-800 {{Request::is('akun') ? 'actives' : '' }}">
+     
+                  <span class="hidden sm:inline mr-8  ">{{$petugas}}</span>
                 </a>
               </li>
 
@@ -117,6 +119,19 @@
       <div class="w-full px-6 py-6 mx-auto">
         <!-- content -->
 
+          @if(Request::is('anggota'))
+
+          <div class="container grid grid-cols-2 pt-3 gap-4 px-10 pb-3 lg:px-0">
+              
+
+            <a href="/daftar-anggota" class="daftar-anggota bg-[#E9FCFF] grid grid-cols-4 py-2  w-1/2 rounded-md cursor-default transition duration-700 hover:scale-105  hover:shadow-md">
+            <p class="col-span-3 text-md lg:text-base ps-3  lg:pt-1"> Tambah Data </p>
+            <i class="fa-solid fa-user-plus text-[#00B1FF] lg:pt-1 pt-3  border-2 border-[#D2F5FF] rounded-full w-fit lg:px-2 lg:py-2  px-[0.20rem]"></i>
+          
+          </a>
+    </div>
+
+          @endif
         @yield('container')
 
       
@@ -165,4 +180,42 @@
   <!-- main script file  -->
 
   <script src="{{asset('assets/js/soft-ui-dashboard-tailwind.js?v=1.0.5')}}" async></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+<script>
+     function hideAside(){
+      var aside = document.getElementById("aside");
+      var main = document.getElementById("navMain");
+
+    if(aside.classList.contains("z-990") ){
+      aside.classList.remove("z-990");
+      main.classList.remove("z-110");
+    } else {
+       aside.classList.add("z-990");
+      main.classList.add("z-110")
+    }
+   
+     }
+</script>
+<script src="{{ asset('assets/html5-qrcode/html5-qrcode.min.js') }}"></script>
+<script>
+  let html5QRCodeScanner = new Html5QrcodeScanner(
+    "reader", {
+      fps : 10,
+      qrbox : {
+        width : 200,
+        height: 200,
+      },
+    }
+  );
+
+  function onScanSuccess(decodedText, decodedResult){
+    window.location.href = decodedResult.decodedText;
+
+    html5QRCodeScanner.clear();
+  }
+
+  html5QRCodeScanner.render(onScanSuccess);
+
+</script>
 </html>

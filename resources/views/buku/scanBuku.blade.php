@@ -1,9 +1,5 @@
 @extends('template.aside')
 
 @section('container')
-
-
-      @livewire('search-buku' )
-
-    
+<div id="reader"></div>
 @endsection

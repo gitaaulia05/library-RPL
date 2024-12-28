@@ -19,6 +19,7 @@ Route::get('/akun' , [LoginController::class, 'akun']);
 Route::get('/buku', [BarangPerpustakaan::class, 'index']);
 Route::get('/tambah-buku', [BarangPerpustakaan::class, 'tambahBuku']);
 Route::post('/simpan-tambah-buku', [BarangPerpustakaan::class, 'SimpanBuku']);
+Route::get('/scanner-buku', [BarangPerpustakaan::class, 'ScanBuku']);
 
 Route::get('/detail-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'detailBuku']);
 
@@ -28,11 +29,16 @@ Route::get('/ubah-data-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'ubahDa
 Route::post('/update-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'UpdateBuku'])->name('update.buku');
 
 Route::delete('/detail-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'deleteBuku']);
-Route::get('/pinjam-buku', [BarangPerpustakaan::class, 'pinjamBuku']);
+Route::get('/pinjam-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'pinjamBuku']);
 
 
 //Anggota
 Route::get('/anggota', [AnggotaPerpustakaan::class, 'index']);
+
 Route::get('/detail-anggota', [AnggotaPerpustakaan::class, 'detailAnggota']);
+
 Route::get('/daftar-anggota', [AnggotaPerpustakaan::class, 'daftarAnggota']);
+Route::post('/daftar-anggota', [AnggotaPerpustakaan::class, 'createAnggota']);
+
+Route::get('/pengembalian-buku', [AnggotaPerpustakaan::class, 'pengembalianBuku']);
 });

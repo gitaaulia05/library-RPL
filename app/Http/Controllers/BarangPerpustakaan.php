@@ -23,7 +23,7 @@ class BarangPerpustakaan extends Controller
 
     public function index(){
      
-            return view('main' , [
+            return view('buku.main' , [
                 "title" => "Buku | Perpustakaan",
                 "Header" => "Buku",
                 "petugas" => $this->petugas['username'],
@@ -48,33 +48,33 @@ class BarangPerpustakaan extends Controller
 
     }
 
+    public function ScanBuku(){
+        return view('buku.scanBuku'  , [
+            "title" => "Scanner Buku | Perpustakaan",
+            "Header" => "Scanner Buku",
+            "petugas" => $this->petugas['username'],
+        ]);
+    }
 
     public function detailBuku($namaBukuSlug){
         $response = $this->bukuService->detail_data($namaBukuSlug);
 
-        return view('detailBuku'  , [
+        return view('buku.detailBuku'  , [
             "title" => "Detail Buku | Perpustakaan",
             "Header" => "Detail Buku",
             "data" => $response, 
+           
             "petugas" => $this->petugas['username'],
             "urlBase" => "http://api-library.test/",
             
         ]);
 }
-        public function pinjamBuku(){
-            return view('pinjamBuku' , [
-                "title" => "Peminjaman Buku | Perpustakaan",
-                "Header" => "Peminjaman Buku",
-                "petugas" => $this->petugas['username'],
-            ]
-        );
-    }
 
     public function ubahData($namaBukuSlug){
 
         $response = $this->bukuService->detail_data($namaBukuSlug);
 
-        return view('UbahBuku' , [
+        return view('buku.UbahBuku' , [
             "title" => "Ubah Data Buku | Perpustakaan",
             "Header" => "Ubah Data Buku",
             "data" => $response, 
@@ -86,9 +86,6 @@ class BarangPerpustakaan extends Controller
     public function UpdateBuku( $namaBukuSlug, Request $request ){
 
         $response = $this->bukuService->updateBuku($namaBukuSlug, $request);
-
-
-
         if($response){
             return redirect('/buku')->with('message-success' , "Data Buku Baru Berhasil Dibuat!");
         } else {
@@ -109,6 +106,20 @@ class BarangPerpustakaan extends Controller
         }
 
     }
+
+
+
+    public function pinjamBuku($namaBukuSlug){
+
+        return view('buku.pinjamBuku' , [
+            "title" => "Peminjaman Buku | Perpustakaan",
+            "Header" => "Peminjaman Buku",
+            "slug" => $namaBukuSlug,
+            "petugas" => $this->petugas['username'],
+        ]
+    );
+}
+
 
   
 }

@@ -72,7 +72,6 @@ class BukuServices
     }
 
     Public function search_data(){
-        $token = session('Authorization');
             $response = Http::withHeaders([
                 'Authorization' => "Bearer ".$this->token,
             ])->get('http://api-library.test/api/buku');

@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 
+body.modal-active aside {
+    opacity: 0.5; /* Redupkan sidebar */
+    pointer-events: none; /* Tidak interaktif */
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Pastikan modal tetap di atas */
+  body.modal-active #popup-modal {
+    z-index: 50; /* Modal harus di atas backdrop dan elemen lainnya */
+  }
+
+
+  .modal-open #popup-modal ~ aside {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  
 .navDiv.active {
     @apply bg-gradient-to-tl from-purple-700 to-blueNav ;
 }
@@ -14,4 +32,8 @@ a.active{
 
 i.active{
     @apply text-white;
+}
+
+.petugas.actives {
+    @apply text-slate-800
 }

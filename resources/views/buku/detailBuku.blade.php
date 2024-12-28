@@ -2,39 +2,6 @@
 
     @section('container')
 
-     {{-- <div class="container my-10 bg-white lg:w-5/12 w-11/12 mx-auto shadow-xl ">
-     <div class="flex justify-between gap-4">
-       @if($data ['gambar_buku'] != null)
-                   <img src="{{$urlBase. ("storage/" . $data['gambar_buku'])}}" class="w-44 mx-auto pt-2">
-            @else 
-                 <img src="{{asset('img/book-open-thin-svgrepo-com.png')}}" class="w-44 mx-auto pt-2">
-            @endif
-
-           <div class="detail-buku-content-text pt-5 ms-4 pb-4 text-xl">
-            <p class="mb-2"> Judul  : {{$data ['nama_buku']}}</p>
-            <p class="mb-2"> Penulis {{$data ['nama_penulis']}}</p>
-            <p class="mb-2"> Penerbit {{$data ['nama_penerbit']}}</p>
-            <p class="mb-2"> Tahun Terbit {{$data ['nama_buku']}}</p>
-            <p class="mb-2"> Stok Buku {{$data ['jumlah_buku']}}</p>
-            </div>
-     </div>
-
-
-      <div class="detail-buku-content-button grid grid-cols-3  pt-2 ms-4 pb-4 gap-4 mx-3">
-
-             <form action="/detail-buku/{{$data ['slug']}}" method="POST">
-            @csrf
-            @method('DELETE')
-             <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="block text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center " type="submit">
-            Hapus Buku
-        </button>
-          </form>
-
-             <a href="/ubah-data-buku/{{$data ['slug']}}" class="block text-white bg-orange-500 hover:bg-orange-300 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Edit Buku</a>
-             <a href="/pinjam-buku" class=" text-white bg-orange-500 hover:bg-orange-300 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Pinjam Buku</a>
-     </div> --}}
-
-
       <div class="card-detail-buku flex justify-center">
           <div class="w-full px-3 mb-6 lg:mb-0 lg:w-7/12 lg:flex-none">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
