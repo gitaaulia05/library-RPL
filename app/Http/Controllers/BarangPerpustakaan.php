@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\buku;
 use Illuminate\Http\Request;
 use App\Services\BukuServices;
+use App\Services\AnggotaServices;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\BukuResource;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,11 @@ class BarangPerpustakaan extends Controller
 {
       
 
-    public function __construct(BukuServices $bukuService){
+    public function __construct(BukuServices $bukuService , AnggotaServices $anggotaService){
             $this->bukuService = $bukuService;
             $this->petugas = $this->bukuService->getPetugas();
+
+            $this->anggotaService = $anggotaService;
     }
 
     public function index(){
@@ -73,7 +76,7 @@ class BarangPerpustakaan extends Controller
     public function ubahData($namaBukuSlug){
 
         $response = $this->bukuService->detail_data($namaBukuSlug);
-
+         
         return view('buku.UbahBuku' , [
             "title" => "Ubah Data Buku | Perpustakaan",
             "Header" => "Ubah Data Buku",
@@ -119,6 +122,25 @@ class BarangPerpustakaan extends Controller
         ]
     );
 }
+
+    public function StorePinjam(){
+        $data = session('pinjamBuku');
+        if(empty($data)){
+            return redirect()->back()->with('message-error' ,'Tidak Ada Data Peminjam yang Valid');
+        }
+
+        $request = new Request($data);
+
+        $response = $this->anggotaService->pinjamBuku(new Request($data));
+        if($response) {
+            return redirect('/buku')->with('message-success' , 'Peminjaman berhasil');
+           session()->forget('pinjamBuku');
+            
+        } else {
+            return redirect()->back();
+            session()->forget('pinjamBuku');
+        }
+    }
 
 
   

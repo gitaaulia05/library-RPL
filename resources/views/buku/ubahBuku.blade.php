@@ -66,7 +66,7 @@
 
                 <div class="tanggal_masuk_buku pt-4">
                     <label for="tanggal_masuk_buku" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Masuk Buku</label>
-                    <input type="date" id="tanggal_masuk_buku" name="tanggal_masuk_buku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-2/3 form-control @error('tanggal_masuk_buku') is-invalid @enderror" value="{{ old('tanggal_masuk_buku', $data['tanggal_masuk_buku']) }}" required>
+                    <input type="date" id="tanggal_masuk_buku" name="tanggal_masuk_buku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-2/3 form-control @error('tanggal_masuk_buku') is-invalid @enderror" value="{{ old('tanggal_masuk_buku', $data['created_at']) }}" required>
                     @error('tanggal_masuk_buku')
                         <div class="invalid-feedback">{{$message}}</div>
                     @enderror
@@ -74,7 +74,7 @@
 
                 <div class="update_terakhir pt-4">
                     <label for="update_terakhir" class="block mb-2 text-sm font-medium text-gray-900">Update Terakhir</label>
-                    <input type="date" id="update_terakhir" name="update_terakhir" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-2/3 form-control @error('update_terakhir') is-invalid @enderror" value="{{ old('update_terakhir', $data['update_terakhir']) }}" required>
+                    <input type="date" id="update_terakhir" name="update_terakhir" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-2/3 form-control @error('update_terakhir') is-invalid @enderror" value="{{ old('update_terakhir', $data['updated_at']) }}" required>
                     @error('update_terakhir')
                         <div class="invalid-feedback">{{$message}}</div>
                     @enderror

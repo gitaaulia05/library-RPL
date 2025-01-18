@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 
+.openSide {
+ @apply translate-x-0;
+ --tw-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+    --tw-shadow-colored: 0 20px 27px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 body.modal-active aside {
     opacity: 0.5; /* Redupkan sidebar */
     pointer-events: none; /* Tidak interaktif */

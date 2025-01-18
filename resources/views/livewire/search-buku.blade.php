@@ -16,14 +16,14 @@
 
    <div class="container grid grid-cols-3 pt-3 gap-4 px-10 lg:px-0">
 
-        <a href="/tambah-buku" class="Stok-buku bg-[#E9FCFF] grid grid-cols-4 py-2  rounded-md cursor-default transition duration-700 hover:scale-105  hover:shadow-md">
+        <a href="/tambah-buku" class="Stok-buku bg-[#E9FCFF] grid grid-cols-4 py-1  rounded-md cursor-default transition duration-700 hover:scale-105  hover:shadow-md">
       <p class="col-span-3 text-md lg:text-base ps-3  lg:pt-1"> Tambah Data </p>
-      <i class="fa-solid fa-file-circle-plus text-[#00B1FF] lg:pt-1 pt-3  border-2 border-[#D2F5FF] rounded-full w-fit lg:px-2 lg:py-2  px-[0.20rem]  " ></i>
+      <i class="fa-solid fa-file-circle-plus text-[#00B1FF] lg:pt-1 pt-3  border-2 border-[#D2F5FF] rounded-full w-fit lg:px-2 lg:py-1  px-[0.20rem]  " ></i>
     </a>
 
-    <div  wire:click="ToogleBukuStokHabis" wire.model="buku_tersedia" class="Menipis-buku bg-[#FFE9E9] grid grid-cols-4 py-2   rounded-md cursor-default transition duration-700 hover:scale-105  hover:shadow-md">
+    <div  wire:click="ToogleBukuStokHabis" wire.model="buku_tersedia" class="Menipis-buku bg-[#FFE9E9] grid grid-cols-4 py-1  rounded-md cursor-default transition duration-700 hover:scale-105  hover:shadow-md">
       <p class="col-span-3 text-md lg:text-base ps-2 pt-2 lg:pt-1"> Stok Habis</p>
-      <i class="fa-solid fa-xmark lg:pt-1 pt-3 text-[#FF6264] border-2 border-[#FFDCDC] rounded-full w-fit lg:px-2 lg:py-2 lg:ms-2 px-[0.40rem]"></i>
+      <i class="fa-solid fa-xmark lg:pt-1 pt-3 text-[#FF6264] border-2 border-[#FFDCDC] rounded-full w-fit lg:px-2 lg:py-2 lg:ms-1 px-[0.40rem]"></i>
     </div>
 
           <!-- Modal toggle -->
@@ -118,6 +118,7 @@
                       @if($d ['gambar_buku'] != null)
                     
                     <img src=" {{$baseUrll . ('storage/' . $d['gambar_buku']) }} " class="w-1/4 mx-auto pt-2 pb-7 ">
+                    <h1>{{$baseUrll . ('storage/' . $d['gambar_buku']) }}</h1>
                     @else
                       <img src="{{asset('img/book-open-thin-svgrepo-com.png')}}" class="w-1/4 mx-auto pt-2 pb-7 ">
                       @endif

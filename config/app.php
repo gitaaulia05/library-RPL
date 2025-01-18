@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://library-rpl-production.up.railway.app/'),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 <div>
 
-<div class="relative mt-1 lg:w-80">
-            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+<div class="relative mt-1 lg:w-80 pb-5">
+            <div class="flex absolute inset-y-0 mb-5 left-0 items-center pl-3 pointer-events-none">
               <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
             </div>
             <input type="text" wire:model.live="search" id="topbar-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-fuchsia-50 focus:border-fuchsia-300 block w-full pl-10 p-2.5"  wire:input="UpdateSearchAnggota" placeholder="Cari anggota">
@@ -46,13 +46,15 @@
                          <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">                               
                         </td>
                          <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap ">
-                                <a href="/detail-anggota" class=" rounded-md px-3 py-1  bg-gradient-to-tl from-yellow2 to-yellow hover:opacity-90">Detail</a>
+                                <a href="/detail-anggota/{{$ag['slug']}}" class=" rounded-md px-3 py-1  bg-gradient-to-tl from-yellow2 to-yellow hover:opacity-90">Detail</a>
                         </td>
                       </tr>
                     </tbody>
+                    
                        @endforeach
                   </table>
                 </div>
+              
               </div>
             </div>
           </div>

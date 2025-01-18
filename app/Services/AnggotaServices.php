@@ -40,4 +40,57 @@ class AnggotaServices
         return $response->successful() ? $response->json('data') : null ;
     }
 
+    public function pinjamBuku(Request $request) {  
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' .$this->token , 
+            'Accept' => 'application/json',
+            'Content-type' => 'application/json'
+        ])->post('http://api-library.test/api/pinjam-buku' ,[
+            'slug' => $request->id_buku,
+            'id_anggota' => $request->id_anggota
+        ]);
+
+
+        return $response->successful() ? $response->json('data') : null;
+    }
+
+    public function searchPeminjaman($anggotaSlug) {
+        $response = Http::withHeaders([
+            "Authorization" => "Bearer ". $this->token,
+        ])->get("http://api-library.test/api/peminjaman-anggota/".$anggotaSlug);
+
+            Log::info($response);
+        return $response->successful() ? $response->json('data') : null;
+    }
+
+    public function detailAnggota($anggotaSlug) {
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer " . $this->token,
+        ])->get("http://api-library.test/api/detail-anggota/".$anggotaSlug);
+
+        return $response->successful() ? $response->json('data') : null;
+
+    }
+
+
+    public function pengembalianBuku($idOrder) {
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer ".$this->token,
+        ])->get("http://api-library.test/api/pengembalian-buku/" . $idOrder);
+
+       return  $response->successful() ? $response->json('data') : null;
+    }
+
+
+    public function simpanPengembalian(Request $request, $idOrder, array $sessionTelat){
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer ". $this->token 
+        ])->post("http://api-library.test/api/pengembalian-simpan/". $idOrder , [
+            'id_order' => $request->id_order,
+            'session_telat' => $sessionTelat,
+        ]);
+        return $response->successful() ? $response->json('data') : null;
+    }
+
+
 }

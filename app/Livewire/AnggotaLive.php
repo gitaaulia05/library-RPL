@@ -26,6 +26,7 @@ class AnggotaLive extends Component
 
         $this->data_search = $this->anggotaService->search();
         $this->baseUrl= "http://api-library.test/";
+     
     }
 
     public function UpdateSearchAnggota(){
@@ -37,10 +38,11 @@ class AnggotaLive extends Component
             'Authorization' => "Bearer ".$this->session
         ])->get($url);
         $this->data_search = $response->successful() ? $response->json('data') : null;
+         
     }
     public function render()
     {
-        // dd($this->data_search);
+       
         return view('livewire.anggota-live' , [
             "title" => "Anggota | Perpustakaan",
             "Header" => "Anggota",

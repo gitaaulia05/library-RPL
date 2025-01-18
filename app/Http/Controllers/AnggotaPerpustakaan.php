@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\order;
 use Illuminate\Http\Request;
 use App\Services\BukuServices;
 use App\Services\AnggotaServices;
@@ -24,13 +25,17 @@ class AnggotaPerpustakaan extends Controller
         ]);
     }
 
-    public function detailAnggota(){
-        return view('livewire.detail-anggota-live' , [
-            "title" => "Anggota | Perpustakaan",
-            "Header" => "Anggota",
+    public function detailAnggota($anggotaSlug){
+
+        return view('anggota.detailAnggota' , [
+            "title" => "Detail Anggota | Perpustakaan",
+            "Header" => "Detail Anggota",
             "petugas" => $this->petugas['username'],
+            "anggota" => $anggotaSlug,
         ]);
     }
+
+    
     public function daftarAnggota(){
         return view('anggota.daftarAnggota' , [
             "title" => "Daftar Anggota | Perpustakaan",
@@ -46,14 +51,33 @@ class AnggotaPerpustakaan extends Controller
         } else {
             return redirect()->back();
         }
-    }
+}
 
 
-    public function pengembalianBuku(){
+    public function pengembalianBuku($idOrder){
         return view('anggota.pengembalianBuku' , [
             "title" => "Pengembalian Buku | Perpustakaan",
             "Header" => "Pengembalian Buku",
             "petugas" => $this->petugas['username'],
+          "id_order" => $idOrder,
         ]);
     }
+
+    public function simpanPengembalian( $idOrder ){
+      $session = session('telat');
+      $data = session('data');
+      $request = new Request($data);
+
+      if(!$session){
+        $response = $this->anggotaService->simpanPengembalian(new Request($data) , $idOrder, $session);
+      } else {
+        $response = $this->anggotaService->simpanPengembalian(new Request($data) , $idOrder, $session);
+      }
+
+      $getSlug = order::with(['anggota'])->where('id_order' , $idOrder)->first();
+
+      return redirect('/detail-anggota/'.$getSlug->anggota->slug)->with('message-success' , 'Buku Berhasil Dikembalikan');
+    }
+
+   
 }

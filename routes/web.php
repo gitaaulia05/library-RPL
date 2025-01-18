@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\LoginMiddleware;
 use App\Http\Middleware\TokenMiddleware;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\BarangPerpustakaan;
 use App\Http\Controllers\AnggotaPerpustakaan;
 
-
+    Route::middleware(LoginMiddleware::class)->group(function() {
 Route::get('/', [LoginController::class, 'index']);
 Route::post('/login-auth', [LoginController::class, 'login']);
-
-
+});
 
 Route::middleware(TokenMiddleware::class)->group(function () {
 
@@ -30,15 +30,18 @@ Route::post('/update-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'UpdateBu
 
 Route::delete('/detail-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'deleteBuku']);
 Route::get('/pinjam-buku/{namaBukuSlug}', [BarangPerpustakaan::class, 'pinjamBuku']);
+Route::post('/pinjam-buku-simpan', [BarangPerpustakaan::class, 'StorePinjam']);
 
 
 //Anggota
 Route::get('/anggota', [AnggotaPerpustakaan::class, 'index']);
 
-Route::get('/detail-anggota', [AnggotaPerpustakaan::class, 'detailAnggota']);
+Route::get('/detail-anggota/{anggotaSlug}', [AnggotaPerpustakaan::class, 'detailAnggota']);
 
 Route::get('/daftar-anggota', [AnggotaPerpustakaan::class, 'daftarAnggota']);
 Route::post('/daftar-anggota', [AnggotaPerpustakaan::class, 'createAnggota']);
 
-Route::get('/pengembalian-buku', [AnggotaPerpustakaan::class, 'pengembalianBuku']);
+
+Route::get('/pengembalian-buku/{idOrder}', [AnggotaPerpustakaan::class, 'pengembalianBuku']);
+Route::post('/pengembalian-buku/{idOrder}' ,  [AnggotaPerpustakaan::class, 'simpanPengembalian']);
 });
