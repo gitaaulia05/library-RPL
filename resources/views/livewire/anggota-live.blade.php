@@ -23,13 +23,12 @@
                     <thead class="align-bottom">
                       <tr>
                         <th class="px-6 py-3 font-bold tracking-normal text-left uppercase align-middle bg-transparent border-b letter border-b-solid text-xxs whitespace-nowrap border-b-gray-200 text-slate-400 opacity-70">Nama Anggota</th>
-                        <th class="px-6 py-3 pl-2 font-bold tracking-normal text-left uppercase align-middle bg-transparent border-b letter border-b-solid text-xxs whitespace-nowrap border-b-gray-200 text-slate-400 opacity-70">Total Pinjam Buku</th>
-                        <th class="px-6 py-3 font-bold tracking-normal text-center uppercase align-middle bg-transparent border-b letter border-b-solid text-xxs whitespace-nowrap border-b-gray-200 text-slate-400 opacity-70">Aksi</th>
+                        <th class="px-6 py-3 font-bold tracking-normal text-left uppercase align-middle bg-transparent border-b letter border-b-solid text-xxs whitespace-nowrap border-b-gray-200 text-slate-400 opacity-70">Aksi</th>
                        
                       </tr>
                     </thead>
                     <tbody>
-                    @foreach ($anggota as $ag)                   
+                    @foreach ($anggota['data'] as $ag)                   
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">
                           <div class="flex px-2 py-1">
@@ -43,8 +42,7 @@
                             </div>
                           </div>
                         </td>
-                         <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">                               
-                        </td>
+                        
                          <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap ">
                                 <a href="/detail-anggota/{{$ag['slug']}}" class=" rounded-md px-3 py-1  bg-gradient-to-tl from-yellow2 to-yellow hover:opacity-90">Detail</a>
                         </td>
@@ -58,5 +56,18 @@
               </div>
             </div>
           </div>
+
+  <nav aria-label="Page navigation example ">
+  <ul class="flex items-center -space-x-px h-8 text-sm mt-3 ">
+    @foreach ($anggota['meta']['links'] as $item)
+
+    <li class="rounded-lg">
+      <a href="{{$item['url2']}}" wire:click.prevent="goToPage('{{$item['url2']}}')"  class="{{$item['active'] ?'activePagination' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700' }}  ">{!! $item['label'] !!}</a>
+    </li>
+       @endforeach
+  
+    </ul>
+</nav>
+
 
 </div>

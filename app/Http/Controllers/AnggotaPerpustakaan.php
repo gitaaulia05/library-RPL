@@ -46,15 +46,19 @@ class AnggotaPerpustakaan extends Controller
 
     public function createAnggota(Request $request){
         $response = $this->anggotaService->create($request);
-        if($response) {
+
+        // dd($response->json('errors'));
+        if($response->successful()) {
             return redirect('/anggota')->with('message-success' , 'Anggota Baru Berhasil Di tambahkan!');
         } else {
-            return redirect()->back();
+            $errors = $response->json('errors') ?? [];
+            return redirect()->back()->withInput()->withErrors($errors)->with('message-error' , 'Data Gagal Disimpan');
         }
 }
 
 
     public function pengembalianBuku($idOrder){
+       
         return view('anggota.pengembalianBuku' , [
             "title" => "Pengembalian Buku | Perpustakaan",
             "Header" => "Pengembalian Buku",
@@ -64,6 +68,8 @@ class AnggotaPerpustakaan extends Controller
     }
 
     public function simpanPengembalian( $idOrder ){
+        $valid = session('tidakValid');
+       
       $session = session('telat');
       $data = session('data');
       $request = new Request($data);

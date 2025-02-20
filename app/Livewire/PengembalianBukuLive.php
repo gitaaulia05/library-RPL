@@ -26,6 +26,8 @@ class PengembalianBukuLive extends Component
 
 
     public function mount(AnggotaServices $anggotaService, $idOrder ) {
+
+    
         $this->idOrder = $idOrder;
         $this->dataSession = [
             'id_order' => $this->idOrder
@@ -34,14 +36,21 @@ class PengembalianBukuLive extends Component
         $this->anggotaService = $anggotaService;
         $this->data_pengembalian = $this->anggotaService->pengembalianBuku($this->idOrder);
 
+        if(!isset($this->data_pengembalian['detail_order'][0]['buku_dikembalikan']) || $this->data_pengembalian['detail_order'][0]['buku_dikembalikan'] != 0 ) {
+            $this->redirect(url()->previous());
+            return;
+        }
+
                 // SET TANGGAL DIPINJAM DAN DIKEMBALIKAN
         $this->tanggalDipinjam = $this->data_pengembalian['detail_order'][0]['created_at'];
         $this->datePengembalian = Carbon::today()->format('Y-m-d');
+     
         $this->late = Carbon::parse($this->tanggalDipinjam)->addDays(7)->format('Y-m-d');
 
         
         if($this->datePengembalian > $this->tanggalDipinjam){
-            session::flash('message-error-warning' , 'Kredit Skor Berkurang 10 poin ');
+            
+            session::flash('telat-message' , 'Kredit Skor Dikembalikan 2 Hari Setelahnya ');
             session(['telat'=> ['telat' => 'true']]);
         }
     
@@ -53,24 +62,29 @@ class PengembalianBukuLive extends Component
 
         if($this->datePengembalian < $this->tanggalDipinjam){
             session::flash('message-error' , 'Tanggal pengembalian Tidak valid');
-           
+            session(['tidakValid' => ['valid' => 'false']]);
         }
 
         if($this->datePengembalian > $this->late) {
-            session::flash('telat-message' , 'Kredit Skor Berkurang 10 poin ');
+            session::flash('telat-message' , 'Kredit Skor Dikembalikan 2 Hari Setelahnya');
         session(['telat'=>['telat' => 'true']]);
         }  
+        else {
+            session()->forget(['tidakValid', 'telat']);
+        }
         
         session(['data' => $this->dataSession]);
     }
     public function render()
     {
-            // dd($this->data_pengembalian);
-        return view('livewire.pengembalian-buku-live' , [
-            "title" => "Pengembalian Buku | Perpustakaan",
-            "Header" => "Pengembalian Buku",
-            "data" => $this->data_pengembalian,
-            
-        ]);
+         
+            return view('livewire.pengembalian-buku-live' , [
+                "title" => "Pengembalian Buku | Perpustakaan",
+                "Header" => "Pengembalian Buku",
+                "data" => $this->data_pengembalian,
+                
+            ]);
+         
+      
     }
 }

@@ -1,14 +1,26 @@
 <div>
+
+@if(session()->has('message-fail'))
+        <div class="message-fail bg-red1 w-2/3 rounded-md mx-auto mt-8 mb-6" id="badge-dismiss-default">
+            <div class="flex justify-between py-3">
+                <h1 class="text-md font-semibold ms-10">{{session('message-fail')}}</h1>
+                <button type="button" class="inline-flex items-center p-1 ms-2 mr-10 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-redDark hover:text-blue-900" data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
+                    <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Remove badge</span>
+                </button>
+            </div>
+        </div>
+    @endif
+
+
     <form action="/pinjam-buku-simpan" method="POST">
     @csrf
        <div class="data-anggota pb-4">
       <div class="flex flex-wrap mt-6 -mx-3">
         <div class="w-full max-w-full px-3 lg:w-5/12 lg:flex-none">
             <div class="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border p-4">
-
-              <div class="relative">
-               <img src="{{$baseUrl . ('storage/'. $data['gambar_qr'])}}" class="h-8">
-              </div>
               <div class="relative">
                 <img src="{{$baseUrl . ('storage/'. $data['gambar_buku'])}}">
               </div>
@@ -30,19 +42,14 @@
 
                         <input type="text" wire:model.live="search" wire:input="FindAnggota" id="nama_anggota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Cari Nama Anggota" value=""  required {{$anggotaCheck && array_filter($anggotaCheck) ? 'readonly' : ''}}/>
                       
-                       @if (empty($hasil))
-                            <h1 class="text-red1 text-center ">Tidak Ada Hasil Nama Anggota</h1>
-                          @elseif($search == "")
-                          <h1 class="text-red-400 text-center">Tidak Ada Hasil Nama Anggota</h1>
-                          @else
-
-                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg mt-2"> 
+                      @if(!empty($hasil) && !empty($search) )
+                      
+                          {{-- @else --}}
+                        <ul wire:mode="listAnggota" class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg mt-2"> 
                          @foreach ($hasil as $sa)  
                             <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600" >
                                 <div class="flex items-center ps-3">
-
-
-                                    <input id="id_anggota" type="checkbox" value="{{$sa['id_anggota']}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 " wire:model="anggotaCheck.{{$sa['id_anggota']}}" wire:click="anggotaCheckbox" {{$anggotaCheck && array_filter($anggotaCheck) && !$anggotaCheck[$sa['id_anggota']]  ? 'disabled' : ''}} {{ $sa['onUp'] == 2 ? 'disabled' : ''}}>
+                                    <input id="id_anggota" type="checkbox" value="{{$sa['id_anggota']}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 " wire:model="anggotaCheck.{{$sa['id_anggota']}}" wire:click="anggotaCheckbox" {{$anggotaCheck && array_filter($anggotaCheck) && !$anggotaCheck[$sa['id_anggota']]  ? 'disabled' : ''}} {{ $sa['onUp'] == 2 ? 'disabled' : ''}} >
                                <label for="nama_peminjam" class="w-full py-3 ms-2 text-sm font-medium text-slate-800 ">{{$sa['nama']}}</label>
                                
                                 </div> 
@@ -97,7 +104,7 @@
 
           <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 transition duration-700 hover:scale-105">
 
-      <button type="submit" wire:click="checkOnup" {{ empty($anggota['onUp']) || $anggota['onUp'] == 2 ? 'disabled' : ''}} >
+      <button type="submit" wire:click="checkOnup" {{ empty($anggota['onUp']) || $anggota['onUp'] == 2  ? 'disabled' : ''}} >
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
               <div class="flex-auto p-4">
                 <div class="flex flex-row -mx-3">

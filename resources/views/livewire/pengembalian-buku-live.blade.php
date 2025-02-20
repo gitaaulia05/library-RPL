@@ -58,7 +58,7 @@
   <div class="flex flex-wrap">
 
   <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 transition duration-700  {{ session()->has('message-error') ? '' : 'hover:scale-105'}} ">
-      <button type="{{ session()->has('message-error') ? 'disabled' : 'submit'}}">
+      <button type="{{ session()->has('message-error') ? 'button' : 'submit'}}">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
               <div class="flex-auto p-4">
                 <div class="flex flex-row -mx-3">

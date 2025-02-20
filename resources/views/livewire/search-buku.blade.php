@@ -11,7 +11,6 @@
             </div>
             <input type="text" wire:model.live="search" id="topbar-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-fuchsia-50 focus:border-fuchsia-300 block w-full pl-10 p-2.5"  wire:input="UpdateSearchBuku" placeholder="Cari Buku">
           </div>
-
 </div>
 
    <div class="container grid grid-cols-3 pt-3 gap-4 px-10 lg:px-0">
@@ -27,7 +26,7 @@
     </div>
 
           <!-- Modal toggle -->
-      <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" onClick="hideAside()">
+      <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center " type="button" >
         Scan Barcode Buku
       </button>
 
@@ -51,7 +50,7 @@
 
       @elseif (session()->has('message-error'))
 
-      <div class="message-error bg-red w-2/3 rounded-md mx-auto mt-8" id="badge-dismiss-default">
+      <div class="message-error bg-red1 w-2/3 rounded-md mx-auto mt-8" id="badge-dismiss-default">
             <div class="flex justify-between py-3">
         <h1 class="text-md font-semibold ms-10">{{session('message-error')}}</h1>
          <button type="button" class="inline-flex items-center p-1 ms-2 mr-10 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-greenDark hover:text-blue-900 " data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
@@ -77,17 +76,9 @@
 
       @endif
 
-      @if(empty($data))
-       <div class="message-success bg-green w-2/3 rounded-md mx-auto mt-8" id="badge-dismiss-default">
-            <div class=" py-3">
-        <h1 class="text-md font-semibold  text-center">Belum Ada Buku yang Ditambahkan !</h1>
-        
-            </div>
-    @else
-
           <div class="list-buku mx-10 my-10  ">
-          <div class="buku grid lg:grid-cols-3  lg:gap-4 h-1/2 ">
-            @foreach ($data as $d)
+          <div class="buku grid  lg:grid-cols-3 lg:gap-4 h-1/2 ">
+            @foreach ($data['data'] as $d)
           <a href="/detail-buku/{{$d ['slug']}}">
                   <div class="buku-card transition mt-5 duration-700 ease-in-out lg:hover:scale-105 ">
                        <div class="buku-card-image bg-white rounded-lg ">
@@ -118,7 +109,7 @@
                       @if($d ['gambar_buku'] != null)
                     
                     <img src=" {{$baseUrll . ('storage/' . $d['gambar_buku']) }} " class="w-1/4 mx-auto pt-2 pb-7 ">
-                    <h1>{{$baseUrll . ('storage/' . $d['gambar_buku']) }}</h1>
+                 
                     @else
                       <img src="{{asset('img/book-open-thin-svgrepo-com.png')}}" class="w-1/4 mx-auto pt-2 pb-7 ">
                       @endif
@@ -128,14 +119,13 @@
                   </a>
                       @endforeach
           </div>
-    @endif
+    {{-- @endif --}}
 
       </div>
 
 
-
       <!-- Main modal -->
-<div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div wire:ignore   id="default-modal" tabindex="-1" aria-hidden="true" class=" default-modal hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow ">
@@ -162,6 +152,19 @@
         </div>
     </div>
 </div>
+
+
+  <nav aria-label="Page navigation example">
+  <ul class="flex items-center -space-x-px h-8 text-sm ">
+    @foreach ($data['meta']['links'] as $item)
+
+    <li class="rounded-lg">
+      <a href="{{$item['url2']}}" wire:click.prevent="goToPage('{{$item['url2']}}')"  class="{{$item['active'] ?'activePagination' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700' }}  ">{!! $item['label'] !!}</a>
+    </li>
+       @endforeach
+  
+    </ul>
+</nav>
 
 
 </div>

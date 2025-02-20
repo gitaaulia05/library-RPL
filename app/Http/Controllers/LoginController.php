@@ -24,7 +24,6 @@ class LoginController extends Controller
     public function login(Request $request){
         $response = $this->bukuService->login($request);
 
-
             if($response){
                 $token = $response['token'] ?? null ;
 
@@ -33,13 +32,11 @@ class LoginController extends Controller
                 return redirect('/buku');
                 
                 } else {
-                    return redirect('/')->with("message-error" , "Username atau Password Salah!");
+                    return redirect('/')->with("message-error" ,$response["message"][0]);
                 }
-
-               
           
             } else {
-                return redirect('/')->with("message-error" , "Username atau Password Salah!");
+                return redirect('/')->with("message-error" ,$response["message"][0]);
             }
         
     }

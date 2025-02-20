@@ -44,3 +44,12 @@ i.active{
 .petugas.actives {
     @apply text-slate-800
 }
+
+.actives {
+   z-index : 990;
+}
+
+.activePagination{
+  @apply z-10 flex items-center justify-center px-3 h-8 leading-tight border text-blueNav bg-sky-50;
+  
+}

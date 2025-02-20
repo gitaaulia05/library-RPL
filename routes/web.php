@@ -7,13 +7,13 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\BarangPerpustakaan;
 use App\Http\Controllers\AnggotaPerpustakaan;
 
+
     Route::middleware(LoginMiddleware::class)->group(function() {
 Route::get('/', [LoginController::class, 'index']);
 Route::post('/login-auth', [LoginController::class, 'login']);
 });
 
 Route::middleware(TokenMiddleware::class)->group(function () {
-
     Route::delete('/logout', [LoginController::class, 'logout']);
 Route::get('/akun' , [LoginController::class, 'akun']);
 Route::get('/buku', [BarangPerpustakaan::class, 'index']);

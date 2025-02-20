@@ -9,7 +9,7 @@ class buku extends Model
     protected $table = "bukus";
     protected $primaryKey = "id_buku";
     protected $keyType = "string";
-    public $timestamps= false;
+    // public $timestamps= false;
     public $incrementing = false;
 
     protected $fillable = [
@@ -22,7 +22,7 @@ class buku extends Model
         "jumlah_buku",
         "buku_tersedia",
         "tanggal_masuk_buku",
-        "update_terakhir"
+        "created_at",
     ];
 
 }

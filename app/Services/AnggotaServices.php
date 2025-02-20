@@ -1,21 +1,36 @@
 <?php
 namespace App\Services;
 
+
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\BukuServices;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
+use Illuminate\Support\Facades\Session;
 
 class AnggotaServices
 {
 
     protected $baseUrl;
     protected $token;
+    protected $eTag;
+    protected $newETag;
 
     public function __construct(){
         $this->baseUrl = config('app.api_base_url' , ENV('API_BASE_URL'));
         $this->token = session('Authorization');
+        // if(!Cache::has('AnggotaCache')) {
+        //     $this->eTag =session()->forget('EtagSearchAnggota') ?? '';
+        // } else {
+        //     $this->eTag =session('EtagSearchAnggota');
+        // }
+    
+       $this->eTag = (string) "1739970892";
+
+      
     }
 
     public function create(Request $request) {
@@ -28,16 +43,52 @@ class AnggotaServices
             'email' => $request->email,
         ]);
 
-        return $response->successful() ? $response->json('data') : null ;
+        return $response;
     }
 
 
     public function search(){
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->token
-        ])->get('http://api-library.test/api/anggota');
+        
+       // dd($this->eTag);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->token,
+                //'If-None-Match' => $this->eTag,
+            ])->get('http://api-library.test/api/anggota');
 
-        return $response->successful() ? $response->json('data') : null ;
+    //     $this->newETag = (string) ($response->json('headers.ETag') ?? '');
+
+
+    //    // dd($response->status());
+    //      if($response->status() == 304){
+    //        //dd('kesana'); 
+    //      return Cache::get('AnggotaCache');
+         
+    //     }
+
+
+    //     if($response->json('headers.ETag') !== $this->eTag || !Cache::has('AnggotaCache')){
+    //         //dd('kesaniii');
+    //           Cache::put('AnggotaCache' , $response->json() , now()->addMinutes(10));
+    //           session(['EtagSearchAnggota' => $this->newETag]);
+
+    //          return $response->json();
+    //         } 
+
+                    return $response->json();
+
+      
+
+    }
+
+    public function searchNoEtag(){
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->token,
+           
+        ])->get('http://api-library.test/api/anggota');
+        \Log::info("Status response search no etag(): ".$response->status());
+
+          return $response->successful() ? $response->json() : null;
+
     }
 
     public function pinjamBuku(Request $request) {  
@@ -51,16 +102,14 @@ class AnggotaServices
         ]);
 
 
-        return $response->successful() ? $response->json('data') : null;
+        return $response;
     }
 
     public function searchPeminjaman($anggotaSlug) {
         $response = Http::withHeaders([
             "Authorization" => "Bearer ". $this->token,
         ])->get("http://api-library.test/api/peminjaman-anggota/".$anggotaSlug);
-
-            Log::info($response);
-        return $response->successful() ? $response->json('data') : null;
+        return $response->successful() ? $response->json() : null;
     }
 
     public function detailAnggota($anggotaSlug) {

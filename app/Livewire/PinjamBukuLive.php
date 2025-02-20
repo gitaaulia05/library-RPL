@@ -23,6 +23,7 @@ class PinjamBukuLive extends Component
     public $anggota;
 
     public $anggotaCheck=[];
+
     
     public function mount ($slug , BukuServices $bukuService , AnggotaServices $anggotaService) {
         $this->slug = $slug;
@@ -34,30 +35,29 @@ class PinjamBukuLive extends Component
     }
 
     public function FindAnggota(){
-
- 
-        $url = 'http://api-library.test/api/anggota';
-
         if(!empty($this->search)){
+            $url = 'http://api-library.test/api/anggota';
             $url .= '?nama='.urlencode($this->search);
-        }
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->session
+            ])->get($url);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->session
-        ])->get($url);
-
-        $this->hasilAnggota = $response->successful() ? $response->json('data') : null;
-
+            $this->hasilAnggota = $response->successful() ? $response->json('data') : null;
+       
+            foreach($this->hasilAnggota as &$anggota){
      
-        foreach($this->hasilAnggota as &$anggota){
- 
-            $this->anggotaCheck[$anggota['id_anggota']] = $this->anggotaCheck[$anggota['id_anggota']] ?? false;
-
-            if( $anggota['credit_anggota']> 50) {
-                $anggota['onUp'] ="1";
-            }  else {
-                $anggota['onUp'] = "2";    
+                $this->anggotaCheck[$anggota['id_anggota']] = $this->anggotaCheck[$anggota['id_anggota']] ?? false;
+    
+                if( $anggota['credit_anggota']> 50) {
+                    $anggota['onUp'] ="1";
+                }  else {
+                    $anggota['onUp'] = "2";    
+                }
             }
+        } else {
+          $this->hasilAnggota = null;
+          $this->search = '';
+
         }
 
      
@@ -67,6 +67,13 @@ class PinjamBukuLive extends Component
     public function anggotaCheckbox (){
        $selectedChecbox = array_filter($this->anggotaCheck, fn($value) => $value);
 
+       if(count($selectedChecbox) > 1) {
+        $lastSelected = array_key_last($selectedChecbox);
+            $this->anggotaCheck = [$lastSelected => true];
+           // dd($lastSelected);
+            //session()->flash('message-error', 'Hanya boleh memilih satu anggota!');
+       }
+       
        if(!empty($selectedChecbox)){
             $selectedId = array_keys($selectedChecbox)[0];
 
@@ -86,25 +93,31 @@ class PinjamBukuLive extends Component
 
     }
 
+
     public function checkOnup(){
+
+   
         if(empty($this->anggota['onUp'])) {
             session::flash('message-error' , 'Silahkan Pilih Nama Anggota Terlebih Dahulu');
         } elseif($this->anggota['onUp'] == 2) {
             session::flash('message-error' , 'Credit Skor Anggota Kurang');
         } else {
-            $data = [
+            $data= [
                 'id_buku' => $this->slug,
                 'id_anggota' => $this->anggota['id_anggota'],
             ];
             
-          session(['pinjamBuku' => $data]);
-          
+            session()->put('pinjamBuku', $data);
+            session()->save();
+
+            //dd(session()->get('pinjamBuku'));
+
         }
     }
 
     public function render()
     {
-           
+        // dd($this->hasilAnggota);
         return view('livewire.pinjam-buku-live'  , [
             "data" => $this->data,
             "hasil" => $this->hasilAnggota,
@@ -112,21 +125,4 @@ class PinjamBukuLive extends Component
         ]);
     }
 
-    public function StorePinjam(){
-        $data = [
-            'id_buku' => $this->slug,
-            'id_anggota' => $this->anggota['id_anggota'],
-        ];
-
-    
-        $response = app(AnggotaServices::class)->pinjamBuku(new Request($data));
-
-        dd($response);
-
-        if($response) {
-            return redirect('/buku')->with('message-success' , 'Peminjaman Buku Berhasil Dibuat!');
-        } else {
-            return redirect('/anggota');
-        }
-    }
 }

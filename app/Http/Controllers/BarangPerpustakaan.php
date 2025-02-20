@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+// use session;
 use App\Models\buku;
 use Illuminate\Http\Request;
 use App\Services\BukuServices;
@@ -11,6 +12,7 @@ use App\Http\Resources\BukuResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Requests\BukuCreateRequest;
+use Illuminate\Support\Facades\Session;
 
 
 class BarangPerpustakaan extends Controller
@@ -25,12 +27,13 @@ class BarangPerpustakaan extends Controller
     }
 
     public function index(){
-     
+   
             return view('buku.main' , [
                 "title" => "Buku | Perpustakaan",
                 "Header" => "Buku",
                 "petugas" => $this->petugas['username'],
             ]);
+          
     }
 
     public function tambahBuku(){
@@ -42,11 +45,16 @@ class BarangPerpustakaan extends Controller
     }
 
     public function SimpanBuku(Request $request){
+      
        $response = $this->bukuService->create_data($request);
-        if($response){
-            return redirect('/buku')->with('message-success' , "Data Buku Baru Berhasil Dibuat!");
+        if($response->successful()){
+           
+            session()->flash('message-success' , "Data Buku Baru Berhasil Dibuat!");
+           
+            return redirect('/buku');
         } else {
-            return redirect()->back();
+           $error =  $response->json('errors') ?? [];
+            return redirect()->back()->withInput()->withErrors($error)->with('message-fail' , "Data Gagal Di Simpan!");
         }
 
     }
@@ -60,13 +68,13 @@ class BarangPerpustakaan extends Controller
     }
 
     public function detailBuku($namaBukuSlug){
+       
         $response = $this->bukuService->detail_data($namaBukuSlug);
 
         return view('buku.detailBuku'  , [
             "title" => "Detail Buku | Perpustakaan",
             "Header" => "Detail Buku",
             "data" => $response, 
-           
             "petugas" => $this->petugas['username'],
             "urlBase" => "http://api-library.test/",
             
@@ -76,12 +84,14 @@ class BarangPerpustakaan extends Controller
     public function ubahData($namaBukuSlug){
 
         $response = $this->bukuService->detail_data($namaBukuSlug);
-         
+    //   dd($response);
+     
         return view('buku.UbahBuku' , [
             "title" => "Ubah Data Buku | Perpustakaan",
             "Header" => "Ubah Data Buku",
             "data" => $response, 
             "petugas" => $this->petugas['username'],
+            "urlBase" => "http://api-library.test/",
         ]
     );
     }
@@ -89,31 +99,37 @@ class BarangPerpustakaan extends Controller
     public function UpdateBuku( $namaBukuSlug, Request $request ){
 
         $response = $this->bukuService->updateBuku($namaBukuSlug, $request);
-        if($response){
-            return redirect('/buku')->with('message-success' , "Data Buku Baru Berhasil Dibuat!");
+      
+        if($response->successful()){
+            return redirect('/buku')->with('message-success' , "Data Buku Berhasil Diubah!");
         } else {
-          
-            return redirect()->back()->with('message-fail' , "Data Gagal Diubah!");
+            $errors = $response->json('errors') ?? [];
+
+           // dd($errors);
+            return redirect()->back()->withInput()->withErrors($errors)->with('message-fail' , "Data Gagal Diubah!");
         }
 
-    }
+}
 
     public function deleteBuku($namaBukuSlug){
-        // dd("hm");
+        
         $response = $this->bukuService->delete_data($namaBukuSlug);
-
-        if($response){
+        if($response->successful()){
             return redirect('/buku')->with("message-success" , "Buku Berhasil Dihapus");
         } else {
-            return redirect()->back();
+            $error = $response->json('errors') ?? [];
+            return redirect()->back()->with('message-error' , $error["message"][0]);
         }
 
     }
-
 
 
     public function pinjamBuku($namaBukuSlug){
-
+       
+        $buku = buku::where('slug' , $namaBukuSlug)->first();
+                    if($buku->buku_tersedia != 1) {
+                return redirect()->back()->with('message-error','Buku Sedang Kosong!');
+            }
         return view('buku.pinjamBuku' , [
             "title" => "Peminjaman Buku | Perpustakaan",
             "Header" => "Peminjaman Buku",
@@ -124,22 +140,32 @@ class BarangPerpustakaan extends Controller
 }
 
     public function StorePinjam(){
-        $data = session('pinjamBuku');
-        if(empty($data)){
+        $data = session()->get('pinjamBuku');
+      
+        if(empty($data) ){
             return redirect()->back()->with('message-error' ,'Tidak Ada Data Peminjam yang Valid');
-        }
+        } else {
 
+            
         $request = new Request($data);
 
         $response = $this->anggotaService->pinjamBuku(new Request($data));
-        if($response) {
-            return redirect('/buku')->with('message-success' , 'Peminjaman berhasil');
+        if($response->successful()) {
+            session()->flash('message-success' , 'Peminjaman berhasil');
+            // session()->put('noPrevPage', true);
+            // session()->save();
+           
            session()->forget('pinjamBuku');
+
+           return redirect('/buku');
             
         } else {
-            return redirect()->back();
+            $error = $response->json('errors') ?? [];
+            return redirect()->back()->withInput()->withErrors($error)->with('message-fail' , 'Peminjaman Gagal Dilakukan !');
             session()->forget('pinjamBuku');
         }
+        }
+
     }
 
 

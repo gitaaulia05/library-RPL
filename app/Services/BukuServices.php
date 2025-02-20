@@ -24,7 +24,7 @@ class BukuServices
             'username' => $request->username,
             'password' => $request->password
         ]);
-        return $response->successful() ? $response->json('data') : null;
+        return $response->successful() ? $response->json('data') : $response->json('errors');
     }
 
 
@@ -55,6 +55,7 @@ class BukuServices
         }
 
     public function create_data(Request $request){
+        // dd($this->token);
         $response = Http::withHeaders([
             'Authorization' => "Bearer ".$this->token,
         ])->asMultipart()->attach(
@@ -65,10 +66,11 @@ class BukuServices
             'nama_penerbit' => $request->nama_penerbit,
             'jumlah_buku' => $request->jumlah_buku,
             'buku_tersedia' => $request->buku_tersedia,
-            'tanggal_masuk_buku' => $request->tanggal_masuk_buku,
-            'update_terakhir' => $request->update_terakhir,
+            'tahun_terbit' => $request->tahun_terbit,
+            'created_at' => $request->created_at,
+            // 'update_terakhir' => $request->update_terakhir,
         ]);
-        return $response->successful() ? $response->json('data') : null;
+        return $response;
     }
 
     Public function search_data(){
@@ -76,35 +78,38 @@ class BukuServices
                 'Authorization' => "Bearer ".$this->token,
             ])->get('http://api-library.test/api/buku');
             
-            return $response->successful() ? $response->json('data') : null;
+            return $response->successful() ? $response->json() : null;
     }  
 
 
 
     public function updateBuku( $namaBukuSlug, Request $request  ){
-        $response = Http::withHeaders([
+        $httpRequest = Http::withHeaders([
             'Authorization' => 'Bearer '. $this->token
-        ])->asMultipart()->attach(
-            'gambar_buku', 
-            file_get_contents($request->file('gambar_buku')->getRealPath()), 
-            $request->file('gambar_buku')->getClientOriginalName()
-        )->post("http://api-library.test/api/buku/$namaBukuSlug", [
+        ])->asMultipart(); 
+        
+        if($request->hasFile('gambar_buku')){
+            $httpRequest->attach(
+                'gambar_buku', 
+                file_get_contents($request->file('gambar_buku')->getRealPath()), 
+                $request->file('gambar_buku')->getClientOriginalName()
+            );
+        } else {
+            // Kirim gambar lama jika tidak ada gambar baru
+            $httpRequest->attach('gambar_lama', $request->gambar_lama);
+        }
+
+
+        $response = $httpRequest->post("http://api-library.test/api/buku/$namaBukuSlug", [
             'nama_buku' => $request->nama_buku,
             'nama_penulis' => $request->nama_penulis,
             'nama_penerbit' => $request->nama_penerbit,
             'jumlah_buku' => $request->jumlah_buku,
             'buku_tersedia' => $request->buku_tersedia,
-            'tanggal_masuk_buku' => $request->tanggal_masuk_buku,
-            'update_terakhir' => $request->update_terakhir,
+            'created_at' => $request->created_at,
         ]);
        
-       
-        return $response->successful() ? $response->json('data') : null;
-
-        \Log::info('Sending request with: ', [
-            'nama_buku' => $request->nama_buku,
-            'gambar_buku' => $request->file('gambar_buku')->getClientOriginalName(),
-        ]);
+        return $response;
        
     }
 
@@ -113,7 +118,7 @@ class BukuServices
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$this->token,
         ])->delete("http://api-library.test/api/buku/$namaBukuSlug");
-        return $response->successful() ? $response->json('data') : null;
+        return $response;
     }
   
 }
